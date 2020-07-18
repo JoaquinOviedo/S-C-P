@@ -1,3 +1,8 @@
+
+#made by: Joaco853
+#github: https://github.com/Joaco853
+#steam: https://steamcommunity.com/id/Joaco853/
+
 from bs4 import BeautifulSoup
 import requests
 import json
@@ -12,7 +17,7 @@ store_doc = requests.get("https://store.steampowered.com/api/appdetails?appids="
 storesoup= BeautifulSoup(store_doc.content,"html.parser")
 strstoresoup= str(storesoup)
 storejsonprecio= json.loads(strstoresoup)                                        #lee un objeto en json de un documento , y transforma el json en un string
-strprecio= storejsonprecio[appid]["data"]["price_overview"]["final_formatted"]   # lee lo que pertenece a final_formatted en el json
+strprecio= storejsonprecio[appid]["data"]["price_overview"]["final_formatted"]   #lee lo que pertenece a final_formatted en el json
 
 print("El juego "+urljuegodata[5]+ " cuesta: "+ strprecio)
 
@@ -20,12 +25,16 @@ precioreplace= strprecio.replace("ARS$","")
 precioreplace2= precioreplace.replace(",",".")
 preciodeljuego= float(precioreplace2)
 
-market_doc = requests.get("https://steamcommunity.com/market/search?q=&category_753_Game%5B%5D=tag_app_"+appid+"&category_753_cardborder%5B%5D=tag_cardborder_0&category_753_item_class%5B%5D=tag_item_class_2&appid=753")
+market_doc1 = requests.get("https://steamcommunity.com/market/search?q=&category_753_Game%5B%5D=tag_app_"+appid+"&category_753_cardborder%5B%5D=tag_cardborder_0&category_753_item_class%5B%5D=tag_item_class_2&appid=753#p1_price_asc")
 
-marketsoup = BeautifulSoup(market_doc.content, "html.parser")
+marketsoup1 = BeautifulSoup(market_doc1.content, "html.parser")
+
+market_doc2 = requests.get("https://steamcommunity.com/market/search?q=&category_753_Game%5B%5D=tag_app_"+appid+"&category_753_cardborder%5B%5D=tag_cardborder_0&category_753_item_class%5B%5D=tag_item_class_2&appid=753#p2_price_asc")
+
+marketsoup2 = BeautifulSoup(market_doc2.content, "html.parser")
 
 #lee el total de numeros de carta
-numerosdecartas = marketsoup.find(id="searchResults_total")
+numerosdecartas = marketsoup1.find(id="searchResults_total")
 Ncartas=numerosdecartas.get_text()
 Cartas=int(Ncartas)
 cartas=Cartas
@@ -37,27 +46,34 @@ if Cartas%2==1:
 
 if Cartas>10:
       cartas=10
-      
-Numerocartas= marketsoup.find(id="searchResultsRows")
-gettextnumerocartas = Numerocartas.get_text()
 
-Numerocartasparsed= gettextnumerocartas.split("\n")
-
-
-Director=""
 urlprecio=""
 jsonget=""
 strprecio=""
 sumadeprecios=0
 volumenes=0
-for directores in range(0,cartas):
-      Director= Numerocartasparsed[29+27*directores]
+Numerodevectores=0
 
-      urlprecio = "https://steamcommunity.com/market/priceoverview/?currency=34&appid=753&market_hash_name="+appid+"-"+Director
-      jsonget = requests.get(urlprecio)
+for nombre in marketsoup1.findAll("span", attrs={"class":"market_listing_item_name"}):
+
+      urlprecio += "https://steamcommunity.com/market/priceoverview/?currency=34&appid=753&market_hash_name="+appid+"-"+nombre.text+ "separar"
+
+for nombre in marketsoup2.findAll("span", attrs={"class":"market_listing_item_name"}):
+      urlprecio += "https://steamcommunity.com/market/priceoverview/?currency=34&appid=753&market_hash_name="+appid+"-"+nombre.text+ "separar"
+
+
+vectorurl = urlprecio.split("separar")
+vector= set(vectorurl)
+Numerodevectores= len(vector)
+floatvector = int(Numerodevectores)
+print("de los "+str(Cartas)+" cromos, se leyeron "+str(Numerodevectores-1))
+ 
+
+for i in range(0,floatvector):
+      jsonget = requests.get(vectorurl[i])
       soupprecio =BeautifulSoup(jsonget.content, 'html.parser')
       soupstrprecio= str(soupprecio)
-      jsonprecio= json.loads(soupstrprecio)                                   #lo convierte en json 
+      jsonprecio= json.loads(soupstrprecio)                                   #lo convierte en json
       strprecio= jsonprecio["lowest_price"].replace("ARS$ ","")
       str2precio= strprecio.replace(",",".")
       precio= float(str2precio)
@@ -68,8 +84,7 @@ for directores in range(0,cartas):
       sumadeprecios+= precio
       volumenes+= volumen
 
-
-promedioprecios=sumadeprecios*0.87*Dropcartas/cartas
+promedioprecios=sumadeprecios*0.87*Dropcartas/(floatvector-1)
 promedioprecios= round(promedioprecios,2)
 strpromedioprecios= str(promedioprecios)
 
