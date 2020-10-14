@@ -22,4 +22,6 @@ Luego informa sobre la cantidad de cromos que se vendieron en las ultimas 24hs (
 Luego va a resaltar los juegos que sean profit de los que no sean profit y va a poner algunas indicaciones dependiendo si se venden muchos o pocos cromos, como tambien 
 advirtiendo de la diferencia de precio del cromo de mayor valor y el menor.
 
+Para farmear los cromos usar el Idlemaster o el ArchiSteamFarm
+
 Mi perfil de Steam : https://steamcommunity.com/id/Joaco853
