@@ -9,6 +9,7 @@ import json
 import time
 
 #pide el appid y usa la libreria beatifulsoup y requests para leer la pagina
+
 print("Ingrese las url de los juegos (separadas entre: , )")
 urljuego = input()+","
 urljuego2=urljuego.split(",")
@@ -30,102 +31,145 @@ for j in range(1,Numerosdejuegos):
       precioreplace2= precioreplace.replace(",",".")
       preciodeljuego= float(precioreplace2)
 
-      market_doc1 = requests.get("https://steamcommunity.com/market/search?q=&category_753_Game%5B%5D=tag_app_"+appid+"&category_753_cardborder%5B%5D=tag_cardborder_0&category_753_item_class%5B%5D=tag_item_class_2&appid=753#p1_price_asc")
+      market_doc1 = requests.get("https://www.steamcardexchange.net/index.php?gamepage-appid-"+appid)
 
       marketsoup1 = BeautifulSoup(market_doc1.content, "html.parser")
 
-      market_doc2 = requests.get("https://steamcommunity.com/market/search?q=&category_753_Game%5B%5D=tag_app_"+appid+"&category_753_cardborder%5B%5D=tag_cardborder_0&category_753_item_class%5B%5D=tag_item_class_2&appid=753#p2_price_asc")
+      market_doc2 = requests.get("https://steamcommunity.com/market/search?q=&category_753_Game%5B%5D=tag_app_"+appid+"&category_753_cardborder%5B%5D=tag_cardborder_0&category_753_item_class%5B%5D=tag_item_class_2&appid=753")
 
       marketsoup2 = BeautifulSoup(market_doc2.content, "html.parser")
 
       #lee el total de numeros de carta
-      numerosdecartas = marketsoup1.find(id="searchResults_total")
+
+      numerosdecartas = marketsoup2.find(id="searchResults_total")
       Ncartas=numerosdecartas.get_text()
       Cartas=int(Ncartas)
-      cartas=Cartas
+
       if Cartas%2==0 :
             Dropcartas=Cartas/2
       if Cartas%2==1:
             Dropcartas=(Cartas/2)+0.5
 
 
-      if Cartas>10:
-            cartas=10
-
       urlprecio=""
       jsonget=""
       strprecio=""
       precios=""
+      urlerror=""
       preciomasalto=0
       preciomasbajo=99999
       sumadeprecios=0
       volumenes=0
       Numerodevectores=0
+      Contador=0
+      erroresprecio=0
 
-      for nombre in marketsoup1.findAll("span", attrs={"class":"market_listing_item_name"}):
-
-            urlprecio += "https://steamcommunity.com/market/priceoverview/?currency=34&appid=753&market_hash_name="+appid+"-"+nombre.text+ "separar"
-
-      for nombre in marketsoup2.findAll("span", attrs={"class":"market_listing_item_name"}):
-            urlprecio += "https://steamcommunity.com/market/priceoverview/?currency=34&appid=753&market_hash_name="+appid+"-"+nombre.text+ "separar"
+      for nombre in marketsoup1.findAll("span", attrs={"class":"element-text"}):
+            Contador+=1
+            if Contador<=Cartas :
+             urlprecio += "https://steamcommunity.com/market/priceoverview/?currency=34&appid=753&market_hash_name="+appid+"-"+nombre.text+ "separar"
 
 
       vectorurl = urlprecio.split("separar")
-      vector= set(vectorurl)
-      Numerodevectores= len(vector)
+      Numerodevectores= len(vectorurl)
       floatvector = int(Numerodevectores)
-      print("de los "+str(Cartas)+" cromos, se leyeron "+str(Numerodevectores-1))
       
       
-      for i in range(0,floatvector):
+      for i in range(0,floatvector-1):
+            
+            time.sleep(0.05)
+
             jsonget = requests.get(vectorurl[i])
             soupprecio =BeautifulSoup(jsonget.content, 'html.parser')
             soupstrprecio= str(soupprecio)
             jsonprecio= json.loads(soupstrprecio)                                   #lo convierte en json
-            strprecio= jsonprecio["lowest_price"].replace("ARS$ ","")
-            str2precio= strprecio.replace(",",".")
-            precio= float(str2precio)
-            strvolumen=jsonprecio["volume"]
+            try:
+                  strprecio= jsonprecio["lowest_price"].replace("ARS$ ","")
+            except:
+                  strprecio="0"
+                  erroresprecio+=1
+                  urlerror+=vectorurl[i]+" "
+            try:
+                  strvolumen=jsonprecio["volume"]
+            except:
+                  strvolumen="0"
             str2volumen= strvolumen.replace(",","")
             volumen= float(str2volumen)
 
-            precios+= str(precio) + "separar"
-            sumadeprecios+= precio
             volumenes+= volumen
-            
-            if preciomasalto<precio:
-                  preciomasalto=precio
-            if preciomasbajo>precio:
-                  preciomasbajo=precio
 
-      strPrecios=precios.split("separar")
-      numerodeprecios2=len(strPrecios)
+            str2precio= strprecio.replace(",",".")
+            precio= float(str2precio)
 
-      Diferencia=float(preciomasalto)-float(preciomasbajo)
-      Diferenci= round(Diferencia,2)
-      print("Mayor valor: "+str(preciomasalto)+" Menor valor: "+str(preciomasbajo)+" Diferencia: "+str(Diferencia))
-      promedioprecios=sumadeprecios*0.87*Dropcartas/numerodeprecios2
-      promedioprecios= round(promedioprecios,2)
-      strpromedioprecios= str(promedioprecios)
+            if precio !=0 :
+
+             if preciomasalto<precio:
+                   preciomasalto=precio
+
+             if preciomasbajo>precio:
+                    preciomasbajo=precio
+
+             sumadeprecios+= precio
+             
+
+      if erroresprecio==1 :
+            print("Hubo "+str(erroresprecio)+" error con el valor del cromo: "+ str(urlerror)+" ,y no sera contemplado en el promedio de los precios")
+            print("")
+
+      if erroresprecio>1:
+            print("Hubieron "+str(erroresprecio)+" errores con el valor de los cromos: "+ str(urlerror)+" ,y no seran contemplados en el promedio de los precios")
+            print("")
+
+      if erroresprecio==Cartas:
+            print("Hubo un error con todas las cartas, vuelva a intentarlo , puede ser que se hayan utilizado las 100000 request diarias a las API de steam , en ese caso vuelva a intentarlo mañana")
+            print("")
+
+      if erroresprecio<Cartas:
+
+       Diferencia=float(preciomasalto)-float(preciomasbajo)
+       Diferencia= round(Diferencia,2)
+       Diferencia2= (preciomasalto)/float(preciomasbajo)
+       Diferencia2= round(Diferencia2,2)
+       print("Mayor valor: "+str(preciomasalto)+" // Menor valor: "+str(preciomasbajo)+" // Diferencia: "+str(Diferencia))
+
+       promedioprecios=sumadeprecios*0.87*Dropcartas/(Cartas-erroresprecio)
+
+       promedioprecios= round(promedioprecios,2)
+       strpromedioprecios= str(promedioprecios)
 
       
-      if volumenes>=250 :
-            strvolumenes="Se venden mas de 250 cromos por dia"
-      if volumenes<250 and volumenes>=100 :
-            strvolumenes="Se venden entre 100 y 250 cromos por dia"
+       if volumenes>=250 :
+             strvolumenes="Se vendedieron mas de 250 cromos en las ultimas 24hs"
+       if volumenes<250 and volumenes>=100 :
+             strvolumenes="Se vendedieron entre 100 y 250 cromos en las ultimas 24hs"
 
-      if volumenes<100 and volumenes>=20 :
-            strvolumenes="Se venden entro 20 y 100 por dia"
-      if  volumenes<20 :
-            strvolumenes="Se venden menos de 20 cromos por dia por dia"
+       if volumenes<100 and volumenes>=20 :
+             strvolumenes="Se vendedieron entro 20 y 100 cromos en las ultimas 24hs"
+       if  volumenes<20 :
+             strvolumenes="Se vendedieron menos de 20 cromos en las ultimas 24hs"
+       if volumenes==0:
+             strvolumenes="No se a vendido ningun cromo en las ultimas 24hs"
+       profit=promedioprecios-preciodeljuego
+       profit= round(profit,2)
+       strprofit= str(profit)
+       print("Vendiendo los cromos se obtiene : "+ strpromedioprecios)
+       print("Profit: "+strprofit)
+       print(strvolumenes)
 
-      profit=promedioprecios-preciodeljuego
-      profit= round(profit,2)
-      strprofit= str(profit)
-      print("Vendiendo los cromos se obtiene : "+ strpromedioprecios)
-      print("Profit: "+strprofit)
-      print(strvolumenes)
+      
+       if Diferencia2>=1 and Diferencia2<=1.3 and profit>1 :
+             print("")
+             print("███████████ PROFIT: "+strprofit+" , diferencia de: "+str(Diferencia2)+" ███████████")
+
+       if Diferencia2>1.3 and Diferencia2<=2 and profit>1 :
+             print("")
+             print("███████████ PROFIT: "+strprofit+" , revisar cromos , diferencia de: "+str(Diferencia2)+" ███████████")
+
+       if Diferencia2>2 and profit>1 :     
+             print("")
+             print("███████████ PROFIT: "+strprofit+" , REVISAR CROMOS , WARNING , diferencia de: "+str(Diferencia2)+" ███████████")
+
       print("")
-
       print("Esperando 10 segundos...")
+      print("")
       time.sleep(10)
