@@ -21,3 +21,5 @@ Luego el profit total (lo que se obtendria menos lo que cuesta el juego).
 Luego informa sobre la cantidad de cromos que se vendieron en las ultimas 24hs (el volumen), para ver si ademas de ser profit , los cromos se venden rapido o no.
 Luego va a resaltar los juegos que sean profit de los que no sean profit y va a poner algunas indicaciones dependiendo si se venden muchos o pocos cromos, como tambien 
 advirtiendo de la diferencia de precio del cromo de mayor valor y el menor.
+
+Mi perfil de Steam : https://steamcommunity.com/id/Joaco853
