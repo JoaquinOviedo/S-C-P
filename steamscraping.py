@@ -138,14 +138,14 @@ for j in range(1,Numerosdejuegos):
 
       
        if volumenes>=250 :
-             strvolumenes="Se vendedieron mas de 250 cromos en las ultimas 24hs"
+             strvolumenes="Se vendieron mas de 250 cromos en las ultimas 24hs"
        if volumenes<250 and volumenes>=100 :
-             strvolumenes="Se vendedieron entre 100 y 250 cromos en las ultimas 24hs"
+             strvolumenes="Se vendieron entre 100 y 250 cromos en las ultimas 24hs"
 
        if volumenes<100 and volumenes>=20 :
-             strvolumenes="Se vendedieron entro 20 y 100 cromos en las ultimas 24hs"
+             strvolumenes="Se vendieron entre 20 y 100 cromos en las ultimas 24hs"
        if  volumenes<20 :
-             strvolumenes="Se vendedieron menos de 20 cromos en las ultimas 24hs"
+             strvolumenes="Se vendieron menos de 20 cromos en las ultimas 24hs"
        if volumenes==0:
              strvolumenes="No se a vendido ningun cromo en las ultimas 24hs"
        profit=promedioprecios-preciodeljuego
