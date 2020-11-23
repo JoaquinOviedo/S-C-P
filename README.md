@@ -50,3 +50,5 @@ advirtiendo de la diferencia de precio del cromo de mayor valor y el menor.
 Para farmear los cromos usar el Idlemaster o el ArchiSteamFarm
 
 Mi perfil de Steam : https://steamcommunity.com/id/Joaco853
+
+Si le dan una estrellita me ayudan bastante <3
