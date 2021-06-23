@@ -3,10 +3,12 @@
 #github: https://github.com/Joaco853
 
 from bs4 import BeautifulSoup
+from colorama import init
 import requests
 import json
 import time
 
+init(convert=True)
 #pide el appid y usa la libreria beatifulsoup y requests para leer la pagina
 
 print("Ingrese las url de los juegos (separadas entre: , )")
@@ -24,7 +26,7 @@ for j in range(1,Numerosdejuegos):
       storejsonprecio= json.loads(strstoresoup)                                        #lee un objeto en json de un documento , y transforma el json en un string
       strprecio= storejsonprecio[appid]["data"]["price_overview"]["final_formatted"]   #lee lo que pertenece a final_formatted en el json
 
-      print("El juego "+urljuegodata[5]+ " cuesta: "+ strprecio)
+      print("El juego \033[1;37;40m "+urljuegodata[5]+ "\033[0;37;40m cuesta: \033[1;37;40m"+ strprecio +"\033[0;37;40m")
 
       precioreplace= strprecio.replace("ARS$","")
       precioreplace2= precioreplace.replace(",",".")
@@ -76,7 +78,7 @@ for j in range(1,Numerosdejuegos):
       
       for i in range(0,floatvector-1):
             
-            time.sleep(0.05)
+            time.sleep(0.1)
 
             jsonget = requests.get(vectorurl[i])
             soupprecio =BeautifulSoup(jsonget.content, 'html.parser')
@@ -138,14 +140,14 @@ for j in range(1,Numerosdejuegos):
 
       
        if volumenes>=250 :
-             strvolumenes="Se vendieron mas de 250 cromos en las ultimas 24hs"
+             strvolumenes="Se vendedieron mas de 250 cromos en las ultimas 24hs"
        if volumenes<250 and volumenes>=100 :
-             strvolumenes="Se vendieron entre 100 y 250 cromos en las ultimas 24hs"
+             strvolumenes="Se vendedieron entre 100 y 250 cromos en las ultimas 24hs"
 
        if volumenes<100 and volumenes>=20 :
-             strvolumenes="Se vendieron entre 20 y 100 cromos en las ultimas 24hs"
+             strvolumenes="Se vendedieron entro 20 y 100 cromos en las ultimas 24hs"
        if  volumenes<20 :
-             strvolumenes="Se vendieron menos de 20 cromos en las ultimas 24hs"
+             strvolumenes="Se vendedieron menos de 20 cromos en las ultimas 24hs"
        if volumenes==0:
              strvolumenes="No se a vendido ningun cromo en las ultimas 24hs"
        profit=promedioprecios-preciodeljuego
@@ -158,17 +160,17 @@ for j in range(1,Numerosdejuegos):
       
        if Diferencia2>=1 and Diferencia2<=1.3 and profit>1 :
              print("")
-             print("███████████ PROFIT: "+strprofit+" , diferencia de: "+str(Diferencia2)+" ███████████")
+             print("\033[1;32;40m █ PROFIT: "+strprofit+" diferencia de: "+str(Diferencia2)+" █\033[1;36;40m █ Juego: "+ urljuegodata[5]+" █")
 
        if Diferencia2>1.3 and Diferencia2<=2 and profit>1 :
              print("")
-             print("███████████ PROFIT: "+strprofit+" , revisar cromos , diferencia de: "+str(Diferencia2)+" ███████████")
+             print("\033[1;32;40m █ PROFIT: "+strprofit+" █\033[1;33;40m █ revisar cromos , diferencia de: "+str(Diferencia2)+" █\033[1;36;40m █ Juego: "+urljuegodata[5]+" █")
 
        if Diferencia2>2 and profit>1 :     
              print("")
-             print("███████████ PROFIT: "+strprofit+" , REVISAR CROMOS , WARNING , diferencia de: "+str(Diferencia2)+" ███████████")
+             print("\033[1;32;40m █ PROFIT: "+strprofit+" █\033[1;31;40m █ REVISAR CROMOS , diferencia de: "+str(Diferencia2)+"█ \033[1;36;40m █ Juego: "+urljuegodata[5]+" █")
 
-      print("")
+      print("\033[0;37;40m")
       print("Esperando 10 segundos...")
       print("")
       time.sleep(10)
