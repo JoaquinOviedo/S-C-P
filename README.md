@@ -29,6 +29,10 @@ A veces, nos dice si hubo algun error al obtener los precios de todos los cromos
 
 Video de referencia: https://www.youtube.com/watch?v=Wx1tfcyen0A&list=LL
 
+Preview:
+
+![alt text](https://pbs.twimg.com/media/FHEkNX_XEAAicTT?format=png&name=small)
+
 --------------------------------------------------------------------------------------------------------------------------------------
 
 ⚠️ ALGUNOS ERRORES PERCIBIDOS:
