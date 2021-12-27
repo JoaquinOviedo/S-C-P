@@ -27,7 +27,7 @@ Si va a ingresar solo un juego no hace falta que ingrese una coma , si va a ingr
 
 A veces, nos dice si hubo algun error al obtener los precios de todos los cromos , esto puede deberse a que steam tiene un limite de solicitudes en servidores (por eso lo de la esperar 10 segundos) (RECUERDEN que steam tiene un limite de peticiones diarias de unas 10000, y cada cromo que el programa lee es una petición menos. (EJEMPLO: Si analizamos juegos que tengan 15 cromos, entonces podriamos chequear 666 juegos diarios).
 
-Video de referencia: https://www.youtube.com/watch?v=Wx1tfcyen0A&list=LL
+Video de referencia: https://www.youtube.com/watch?v=Wx1tfcyen0A
 
 Preview:
 
