@@ -1,4 +1,4 @@
-# S-C-P
+# Steam-Cards-Profit
 El programa pide ingresar la url del juego a analizar, para ver si el juego da profit al comprarlo, obtener los cromos del mismo y venderlos en el mercado de steam.
 
 Para que el programa funcione correctamente es recomendable obtener los links de los juegos desde el siguiente buscador de steam:
