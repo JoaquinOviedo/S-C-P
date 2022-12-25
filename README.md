@@ -3,7 +3,7 @@ El programa pide ingresar la url del juego a analizar, para ver si el juego da p
 
 Para que el programa funcione correctamente es recomendable obtener los links de los juegos desde el siguiente buscador de steam:
 
-[Steam Games List](https://store.steampowered.com/search/?sort_by=Price_ASC&category1=998&category2=29&os=win&specials=1&filter=topsellers)
+[Steam Games List](https://store.steampowered.com/search/?sort_by=Price_ASC&category1=998&category2=29&specials=1&ndl=1)
 
 el cual ya esta puesto para que filtre los juegos mas baratos y con cromos.
 
